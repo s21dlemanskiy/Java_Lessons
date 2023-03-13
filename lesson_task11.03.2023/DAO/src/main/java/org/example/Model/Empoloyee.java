@@ -1,5 +1,8 @@
 package org.example.Model;
 
+import org.example.DAO.DAODepartment;
+
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -10,10 +13,10 @@ public class Empoloyee {
     String name;
     String third_name;
     String job_title;
-    String department;
+    Deprtment department;
     double salary;
 
-    public Empoloyee(int id, String surname, String name, String third_name, String job_title, String department, double salary) {
+    public Empoloyee(int id, String surname, String name, String third_name, String job_title, Deprtment department, double salary) {
         this.id = id;
         this.surname = surname;
         this.name = name;
@@ -22,13 +25,13 @@ public class Empoloyee {
         this.department = department;
         this.salary = salary;
     }
-    public Empoloyee(ResultSet result) throws SQLException {
+    public Empoloyee(ResultSet result, Connection connection) throws SQLException {
         this.id = result.getInt("id");
         this.surname = result.getString("surname");
         this.name =  result.getString("name");
         this.third_name =  result.getString("third_name");
         this.job_title =  result.getString("job_title");
-        this.department =  result.getString("department");
+        this.department =  (new DAODepartment(connection)).getById(result.getInt("department"));
         this.salary =  result.getDouble("salary");
     }
 
@@ -45,7 +48,7 @@ public class Empoloyee {
                 '}';
     }
 
-    public static Empoloyee parse(){
+    public static Empoloyee parse() throws SQLException {
         Scanner sc = new Scanner(System.in);
         System.out.print("id:");
         int id = Integer.parseInt(sc.next());
@@ -57,8 +60,9 @@ public class Empoloyee {
         String third_name =  sc.next();
         System.out.print("\njob_title:");
         String job_title =  sc.next();
-        System.out.print("\ndepartment:");
-        String department =  sc.next();
+        System.out.print("\ndepartment name:");
+        String department_name =  sc.next();
+        Deprtment department = (new DAODepartment()).createIfNotExists(department_name);
         System.out.print("\nsalary(double):");
         double salary =  Double.parseDouble(sc.next());
         System.out.print("\n");
@@ -105,12 +109,8 @@ public class Empoloyee {
         this.job_title = job_title;
     }
 
-    public String getDepartment() {
-        return this.department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
+    public Deprtment getDepartment() {
+        return department;
     }
 
     public double getSalary() {
