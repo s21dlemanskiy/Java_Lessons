@@ -28,7 +28,7 @@ public class ReciveDataController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String get_data(@RequestParam String postgres_pass, @RequestParam String postgres_user,
+    public Object get_data(@RequestParam String postgres_pass, @RequestParam String postgres_user,
                            @RequestParam String table, @RequestParam Integer place_id,
                            @RequestParam Integer start, @RequestParam Integer end){
         System.out.println("[+] Json /get-data formating...");
@@ -48,14 +48,7 @@ public class ReciveDataController {
             System.out.println(e.getMessage());
             return "{\"datetime\" : [], \"heights\" : [], \"latitude\" : [], \"longitude\" : [], \"error\" : \"receive data error\"}";
         }
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String json;
-        try {
-            json = ow.writeValueAsString(data);
-        } catch (JsonProcessingException e) {
-            return "{\"datetime\" : [], \"heights\" : [], \"latitude\" : [], \"longitude\" : [], \"error\" : \"json error\"}";
-        }
-        return json.toString();
+        return data;
 
     }
 
@@ -66,7 +59,7 @@ public class ReciveDataController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    public String get_balance(@RequestParam String postgres_pass, @RequestParam String postgres_user,
+    public Object get_balance(@RequestParam String postgres_pass, @RequestParam String postgres_user,
                            @RequestParam String table, @RequestParam Integer place_id){
         System.out.println("[+] Json /get-balance formating...");
         PostgresDAO postgre_dao;
@@ -85,14 +78,7 @@ public class ReciveDataController {
             System.out.println(e.getMessage());
             return "{'point_count' : 0, 'error' : 'receive data error'}";
         }
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String json;
-        try {
-            json = ow.writeValueAsString(balance);
-        } catch (JsonProcessingException e) {
-            return "{'point_count' : 0, 'error' : 'json error'}";
-        }
-        return json.toString();
+        return balance;
 
     }
 
@@ -103,7 +89,7 @@ public class ReciveDataController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    public String get_place_id_list(@RequestParam String postgres_pass, @RequestParam String postgres_user,
+    public Object get_place_id_list(@RequestParam String postgres_pass, @RequestParam String postgres_user,
                                     @RequestParam String table){
         System.out.println("[+] Json /get-balance formating...");
         PostgresDAO postgre_dao;
@@ -122,14 +108,7 @@ public class ReciveDataController {
             System.out.println(e.getMessage());
             return "{'place_id_list' : [], 'error' : 'receive data error'}";
         }
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String json;
-        try {
-            json = ow.writeValueAsString(place_id_list);
-        } catch (JsonProcessingException e) {
-            return "{'place_id_list' : [], 'error' : 'json error'}";
-        }
-        return json.toString();
+        return place_id_list;
 
     }
 }
